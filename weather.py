@@ -30,6 +30,9 @@ def get_weather(city):
 
     # 4. Parse JSON
     data = response.json()
+
+    if response.status_code == 404:
+        print(f'Could not find "{city}". Check the spelling and try again')
     if response.status_code != 200:
         print("OpenWeather request failed.")
         return
@@ -42,10 +45,33 @@ def get_weather(city):
     # 6. Extract key info
     city_name = data["name"]
     temp = data["main"]["temp"]
+    humidity = data["main"]["humidity"]
     description = data["weather"][0]["description"]
     
     # 7. Print
-    print(f"In {city_name}, it is {temp}°C with {description}.")
+    print(f"\nWeather for {city_name}")
+    print(f"Temperature: {temp}°C")
+    print(f"Humidity: {humidity}%")
+    print(f"Conditions: {description.title()}")
+    return True
+while True:
+    city = input("Enter a U.S. city: ").strip()
+
+    if not city:
+        print("Please enter a city name.")
+        continue
+
+    if get_weather(city):
+        break
 
 # Try it
 get_weather("Raleigh")
+
+def main():
+    # ask user for city
+    # call get_weather()
+    city = input("Enter a U.S. city: ")
+    get_weather(city)
+
+if __name__ == "__main__":
+    main()
