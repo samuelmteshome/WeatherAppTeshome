@@ -1,0 +1,51 @@
+import requests
+import os
+from dotenv import load_dotenv
+
+# Load your API key from .env file
+load_dotenv()
+API_KEY = os.getenv("OPENWEATHER_API_KEY")
+load_dotenv()
+API_KEY = os.getenv("OPENWEATHER_API_KEY")
+
+print("Key loaded:", API_KEY is not None)
+print("Key length:", len(API_KEY) if API_KEY else 0)
+
+def get_weather(city):
+    """
+    Fetch weather for the given city and print it nicely.
+    """
+    # 1. Create the API endpoint URL
+    url = "https://api.openweathermap.org/data/2.5/weather"
+    
+    # 2. Set query parameters
+    params = {
+        "q": city,
+        "appid": API_KEY,
+        "units": "metric"  # temperature in Celsius
+    }
+    
+    # 3. Make the request
+    response = requests.get(url, params=params)
+
+    # 4. Parse JSON
+    data = response.json()
+    if response.status_code != 200:
+        print("OpenWeather request failed.")
+        return
+    print("Status code:", response.status_code)
+    print("Response:", data)
+
+    # 5. Parse JSON
+    data = response.json()
+    
+    # 6. Extract key info
+    city_name = data["name"]
+    temp = data["main"]["temp"]
+    description = data["weather"][0]["description"]
+    
+    # 7. Print
+    print(f"In {city_name}, it is {temp}°C with {description}.")
+
+# Try it
+get_weather("Raleigh")
